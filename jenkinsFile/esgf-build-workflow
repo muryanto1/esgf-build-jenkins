@@ -1,0 +1,16 @@
+def error = null
+currentBuild.result = "SUCCESS"
+try {
+    stage('checkout') {
+        node('master') {
+	    withEnv(["ws=${pwd()}"]) {
+            echo "HELLO from esgf-build.esg-orp" 
+            echo "This build is built with the payload ref_type: $payload_ref_type"
+            echo "The ref is: $payload_ref"
+	            }
+        }
+    }
+} catch (caughtException) {
+    error = caughtException
+    currentBuild.result = "FAILURE"
+}
