@@ -16,6 +16,12 @@ esgf_build_jenkins_url = "https://github.com/muryanto1/esgf-build-jenkins.git"
 
 
 try {
+    environment {
+        PATH=/var/lib/jenkins/work/misc/miniconda2/bin:${env.PATH}
+	PATH=/var/lib/jenkins/work/misc/apache-ant-1.10.5/bin:${env.PATH}
+	PATH=/usr/local/java/bin:${env.PATH}
+	JAVA_HOME=/usr/local/java
+    }
     stage('checkout') {
         node('master') {
 	    withEnv(["ws=${pwd()}"]) {
@@ -28,6 +34,7 @@ try {
 		echo "HELLO from esgf-build.esg-orp" 
            	echo "This build is built with the payload ref_type: $payload_ref_type"
             	echo "The ref is: $payload_ref"
+		echo "PATH: ${env.PATH}"
 	    }
         }
     }
