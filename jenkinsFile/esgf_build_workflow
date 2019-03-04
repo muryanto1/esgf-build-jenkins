@@ -6,9 +6,13 @@ currentBuild.result = "SUCCESS"
 // esgf_repo_branch
 
 // on master
-python2 = "/var/lib/jenkins/work/miniconda2/bin/python"
-python3 = "/var/lib/jenkins/work/miniconda3/bin/python"
-
+conda2_path = "/var/lib/jenkins/work/miniconda2/bin/"
+conda3_path = "/var/lib/jenkins/work/miniconda3/bin/"
+python2 = "${conda2_path}/python"
+python3 = "${conda3_path}/python"
+ant_path = "/var/lib/jenkins/work/misc/apache-ant-1.10.5/bin"
+java_home = "/usr/local/java"
+java_path = "${java_home}/bin"
 
 esgf_build_url = "https://github.com/ESGF/esgf-build.git"
 esgf_build_branch = "multi_branch"
@@ -28,15 +32,15 @@ try {
 		echo "HELLO from esgf-build.esg-orp" 
            	echo "This build is built with the payload ref_type: $payload_ref_type"
             	echo "The ref is: $payload_ref"
-		sh "which ant"
 		echo "PATH: ${env.PATH}"
 	    }
         }
     }
     stage('build') {
         node('master') {
-	    withEnv(["ws=${pwd()}"]) {
+	    withEnv(["ws=${pwd()}","PATH=${conda2_path}:${ant_path}:${java_path}:${env.PATH}","JAVA_HOME=${java_home}"]) {
 	        dir("esgf-build") {
+		    sh "which ant"
                     sh "${python2} esgf_build.py -d ${ws} -b ${esgf_repo_branch} --prerelease --synctag --upload ${esgf_repo}"
 		}
 	    }
