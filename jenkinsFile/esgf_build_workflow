@@ -1,13 +1,28 @@
 def error = null
 currentBuild.result = "SUCCESS"
+
+// parameters
+// esgf_repo
+
+esgf_build_url = "https://github.com/ESGF/esgf-build.git"
+esgf_build_branch = "multi_branch"
+esgf_build_jenkins_url = "https://github.com/muryanto1/esgf-build-jenkins.git"
+
+
 try {
     stage('checkout') {
         node('master') {
 	    withEnv(["ws=${pwd()}"]) {
-            echo "HELLO from esgf-build.esg-orp" 
-            echo "This build is built with the payload ref_type: $payload_ref_type"
-            echo "The ref is: $payload_ref"
-	            }
+	        dir("esgf-build") {
+                    git branch: "$esgf_build_branch", credentialsId: 'muryanto1', url: "${esgf_build_url}"
+		}
+	        dir("esgf-build-jenkins") {
+                    git branch: "master", credentialsId: 'muryanto1', url: "${esgf_build_jenkins_url}"
+		}
+		echo "HELLO from esgf-build.esg-orp" 
+           	echo "This build is built with the payload ref_type: $payload_ref_type"
+            	echo "The ref is: $payload_ref"
+	    }
         }
     }
 } catch (caughtException) {
