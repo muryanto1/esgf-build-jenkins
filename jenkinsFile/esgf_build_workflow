@@ -34,7 +34,7 @@ try {
         node('master') {
 	    withEnv(["ws=${pwd()}"]) {
 	        dir("esgf-build") {
-                    ${python} esgf_build.py -d ${ws} -b ${esgf_repo_branch} --prerelease --synctag --upload ${esgf_repo}
+                    sh "${python} esgf_build.py -d ${ws} -b ${esgf_repo_branch} --prerelease --synctag --upload ${esgf_repo}"
 		}
 	    }
         }
