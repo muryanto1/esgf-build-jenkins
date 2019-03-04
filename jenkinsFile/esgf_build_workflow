@@ -39,7 +39,7 @@ try {
         node('master') {
 	    withEnv(["ws=${pwd()}"]) {
 	        dir("esgf-build") {
-		    def set_env "export PATH=${conda2_path}:${ant_path}:${java_path}:$PATH; export JAVA_HOME=${java_home}"
+		    def set_env = "export PATH=${conda2_path}:${ant_path}:${java_path}:$PATH; export JAVA_HOME=${java_home}"
                     sh "bash -c '${set_env}; ${python2} esgf_build.py -d ${ws} -b ${esgf_repo_branch} --prerelease --synctag --upload ${esgf_repo}'"
 		}
 	    }
