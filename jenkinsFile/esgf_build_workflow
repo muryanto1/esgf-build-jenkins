@@ -3,6 +3,11 @@ currentBuild.result = "SUCCESS"
 
 // parameters
 // esgf_repo
+// esgf_repo_branch
+
+// on master
+conda_path = "/var/lib/jenkins/work/miniconda3/bin"
+python = "${conda_path}/python"
 
 esgf_build_url = "https://github.com/ESGF/esgf-build.git"
 esgf_build_branch = "multi_branch"
@@ -22,6 +27,15 @@ try {
 		echo "HELLO from esgf-build.esg-orp" 
            	echo "This build is built with the payload ref_type: $payload_ref_type"
             	echo "The ref is: $payload_ref"
+	    }
+        }
+    }
+    stage('build') {
+        node('master') {
+	    withEnv(["ws=${pwd()}"]) {
+	        dir("esgf-build") {
+                    ${python} esgf_build.py -d ${ws} -b ${esgf_repo_branch} --prerelease --synctag --upload ${esgf_repo}
+		}
 	    }
         }
     }
